@@ -1,0 +1,16 @@
+version: "3.1"
+services:
+
+  minio:
+    image: bitnami/minio:2021.10.13-debian-10-r0
+    environment:
+      - MINIO_ACCESS_KEY=access-key
+      - MINIO_SECRET_KEY=secret-key
+    networks:
+      - gofi
+    ports:
+      - 9000:9000
+      - 9001:9001
+
+networks:
+  gofi:

@@ -1,0 +1,214 @@
+openapi: 3.0.1
+info:
+  title: Gofi
+  description: API documentation for the Gofi.
+  contact:
+    email: rashad.ansari1996@gmail.com
+  version: 1.0.0
+servers:
+- url: http://127.0.0.1:7677/
+paths:
+  /v1/file/download:
+    get:
+      tags:
+      - File
+      summary: Get File Download URL
+      description: By using this endpoint, you will get a URL for downloading your
+        file.
+      operationId: GetFileDownloadURL
+      parameters:
+      - name: fileId
+        in: query
+        required: true
+        schema:
+          type: string
+          x-go-name: FileID
+        x-go-name: FileID
+      - name: accessHash
+        in: query
+        required: true
+        schema:
+          type: string
+          x-go-name: AccessHash
+        x-go-name: AccessHash
+      responses:
+        200:
+          description: Get file download URL response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFileDownloadURLResponse'
+        400:
+          description: Error response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Something Went Wrong!
+                    x-go-name: Message
+        403:
+          description: Error response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Something Went Wrong!
+                    x-go-name: Message
+        500:
+          description: Error response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Something Went Wrong!
+                    x-go-name: Message
+  /v1/file/upload:
+    get:
+      tags:
+      - File
+      summary: Get File Upload URL
+      description: By using this endpoint, you will get a URL for uploading your file
+        (For less than 5 MB file size).
+      operationId: GetFileUploadURL
+      parameters:
+      - name: Content-Type
+        in: header
+        required: true
+        schema:
+          type: string
+          x-go-name: ContentType
+        x-go-name: ContentType
+      - name: Content-Length
+        in: header
+        required: true
+        schema:
+          type: integer
+          format: int64
+          x-go-name: ContentLength
+        x-go-name: ContentLength
+      responses:
+        200:
+          description: Get file upload URL response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFileUploadURLResponse'
+        400:
+          description: Error response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Something Went Wrong!
+                    x-go-name: Message
+        500:
+          description: Error response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Something Went Wrong!
+                    x-go-name: Message
+components:
+  schemas:
+    GetFileDownloadURLResponse:
+      type: object
+      properties:
+        content_length:
+          type: integer
+          format: int64
+          example: 1977
+          x-go-name: ContentLength
+        content_type:
+          type: string
+          example: image/png
+          x-go-name: ContentType
+        download_url:
+          type: string
+          example: http://127.0.0.1:9000/gofi/406ab97e-eb4d-4697-9d37-9b890d2af7b4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=access-key%2F20211019%2Feu-east-1%2Fs3%2Faws4_request&X-Amz-Date=20211019T114140Z&X-Amz-Expires=300&X-Amz-SignedHeaders=host&X-Amz-Signature=5c4de9845ab5ed7726fbe81b913f1564f355ea303e324affa53d8e5e9549ea25
+          x-go-name: DownloadURL
+        expire_at:
+          type: string
+          description: RFC 3339 time format.
+          format: date-time
+          example: "2021-10-19T13:42:35+02:00"
+          x-go-name: ExpireAt
+      x-go-package: github.com/RashadAnsari/gofi/internal/app/gofi/handler/file
+    GetFileUploadURLResponse:
+      type: object
+      properties:
+        access_hash:
+          type: string
+          example: cd001b1c-c482-4bb8-a51b-6fcd0236487d
+          x-go-name: AccessHash
+        expire_at:
+          type: string
+          description: RFC 3339 time format.
+          format: date-time
+          example: "2021-10-19T13:42:35+02:00"
+          x-go-name: ExpireAt
+        file_id:
+          type: string
+          example: 46ef48d4-224e-44a6-ab2f-0e71efddd248
+          x-go-name: FileID
+        upload_headers:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            content-length:
+            - "1977"
+            content-type:
+            - image/png
+            x-amz-meta-access-hash:
+            - cd001b1c-c482-4bb8-a51b-6fcd0236487d
+          x-go-name: UploadHeaders
+        upload_url:
+          type: string
+          example: http://127.0.0.1:9000/gofi/46ef48d4-224e-44a6-ab2f-0e71efddd248?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=access-key%2F20211019%2Feu-east-1%2Fs3%2Faws4_request&X-Amz-Date=20211019T104626Z&X-Amz-Expires=300&X-Amz-SignedHeaders=content-length%3Bcontent-type%3Bhost%3Bx-amz-meta-access-hash&X-Amz-Signature=01cb5e304b2a3341a14bca2fd3fb074b369c5e8d49221d5511e312859e1bcd9a
+          x-go-name: UploadURL
+      x-go-package: github.com/RashadAnsari/gofi/internal/app/gofi/handler/file
+  responses:
+    Error:
+      description: Error response.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Something Went Wrong!
+                x-go-name: Message
+    GetFileDownloadURLResponse:
+      description: Get file download URL response.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetFileDownloadURLResponse'
+    GetFileUploadURLResponse:
+      description: Get file upload URL response.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetFileUploadURLResponse'
+    NoContent:
+      description: No Content response.
+      content: {}
